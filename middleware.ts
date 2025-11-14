@@ -10,8 +10,6 @@ export default clerkMiddleware(async (auth, req) => {
   const { sessionClaims } = await auth();
   const sessionRole = sessionClaims?.metadata?.role;
   
-  console.log('Session Role:', sessionRole);
-
   if (isAdminRoute(req) && sessionRole !== 'superadmin') {
     return NextResponse.redirect(new URL('/', req.url));
   }

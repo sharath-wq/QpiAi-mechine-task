@@ -31,7 +31,6 @@ export function RoleForm({
         </SelectTrigger>
 
         <SelectContent>
-          {/* <SelectItem value="superadmin">Superadmin</SelectItem> */}
           <SelectItem value="admin">Admin</SelectItem>
           <SelectItem value="manager">Manager</SelectItem>
           <SelectItem value="user">User</SelectItem>
@@ -39,8 +38,7 @@ export function RoleForm({
         </SelectContent>
       </Select>
 
-      {/* 🔥 This fixes the loader */}
-      <SubmitButton disabled={isSame} />
+      <SubmitButton varient="default" disabled={isSame} />
     </form>
   );
 }

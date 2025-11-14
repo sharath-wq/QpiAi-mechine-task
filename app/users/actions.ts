@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache";
 export async function setRole(formData: FormData) {
   const { sessionClaims } = await auth();
 
-  if (sessionClaims?.metadata?.role !== "admin") {
+  if (sessionClaims?.metadata?.role !== "superadmin") {
     throw new Error("Not Authorized");
   }
 
@@ -19,7 +19,7 @@ export async function setRole(formData: FormData) {
     await client.users.updateUser(id, {
       publicMetadata: { role },
     });
-    revalidatePath("/admin");
+    revalidatePath("/users");
   } catch (error) {
     console.error("Error updating user role:", error);
     throw new Error("Failed to update user role");
@@ -29,7 +29,7 @@ export async function setRole(formData: FormData) {
 export async function removeRole(formData: FormData) {
   const { sessionClaims } = await auth();
 
-  if (sessionClaims?.metadata?.role !== "admin") {
+  if (sessionClaims?.metadata?.role !== "superadmin") {
     throw new Error("Not Authorized");
   }
 
@@ -40,7 +40,7 @@ export async function removeRole(formData: FormData) {
     await client.users.updateUser(id, {
       publicMetadata: { role: null },
     });
-    revalidatePath("/admin");
+    revalidatePath("/users");
   } catch (error) {
     console.error("Error removing user role:", error);
     throw new Error("Failed to remove user role");

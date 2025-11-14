@@ -12,7 +12,7 @@ export default clerkMiddleware(async (auth, req) => {
   
   console.log('Session Role:', sessionRole);
 
-  if (isAdminRoute(req) && sessionRole !== 'admin') {
+  if (isAdminRoute(req) && sessionRole !== 'superadmin') {
     return NextResponse.redirect(new URL('/', req.url));
   }
 });

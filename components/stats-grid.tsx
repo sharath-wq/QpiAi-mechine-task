@@ -14,7 +14,7 @@ const ROLES = ["superadmin", "admin", "manager", "user", "guest"] as const;
 
 export const StatsGrid = ({ users }: any) => {
   const roleCount = (role: string) =>
-    users.filter((u: any) => u.publicMetadata?.role === role).length;
+    users.filter((u: any) => u?.role === role).length;
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">

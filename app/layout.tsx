@@ -12,6 +12,7 @@ import "./globals.css";
 import { Navigation } from "@/components/navigation";
 import { UploadProvider } from "@/contexts/upload-context";
 import { UploadNotification } from "@/components/upload-notification";
+import ErrorBoundary from "@/components/error-boundary"; // Import the ErrorBoundary
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,8 +25,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "QpiAi",
-  description: "QpiAi - Platform",
+  title: "FileRBC",
+  description: "FileRBC - Platform",
 };
 
 export default function RootLayout({
@@ -40,10 +41,12 @@ export default function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <Navigation />
-          <UploadProvider>
-            {children}
-            <UploadNotification />
-          </UploadProvider>
+          <ErrorBoundary> 
+            <UploadProvider>
+              {children}
+              <UploadNotification />
+            </UploadProvider>
+          </ErrorBoundary>
         </body>
       </html>
     </ClerkProvider>

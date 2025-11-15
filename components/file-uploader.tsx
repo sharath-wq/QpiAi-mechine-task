@@ -6,12 +6,14 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { useUploadContext } from '@/contexts/upload-context'
 import { useAuth } from '@clerk/nextjs'
+import { cn } from '@/lib/utils'
 
 interface FileUploadState {
   id: string
   file: File
   status: 'pending' | 'uploading' | 'success' | 'error'
   error?: string
+  progress?: number
 }
 
 export function FileUploader() {
@@ -238,6 +240,20 @@ export function FileUploader() {
                       {upload.error}
                     </p>
                   )}
+                  {upload.status === 'uploading' && (
+                    <div className="relative h-2 w-full rounded-full bg-secondary mt-2">
+                      <div
+                        className={cn(
+                          'h-full rounded-full bg-primary transition-all',
+                          upload.progress === 100 && 'bg-green-500'
+                        )}
+                        style={{ width: `${upload.progress}%` }}
+                      />
+                      <span className="absolute inset-0 flex items-center justify-center text-xs font-medium text-primary-foreground">
+                        {upload.progress}%
+                      </span>
+                    </div>
+                  )}
                 </div>
                 <Button
                   variant="ghost"
@@ -254,3 +270,4 @@ export function FileUploader() {
     </div>
   )
 }
+

@@ -1,12 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { writeFile, mkdir } from 'fs/promises'
-import { join } from 'path'
-import { existsSync } from 'fs'
+import { auth } from '@clerk/nextjs/server'
+import { v2 as cloudinary } from 'cloudinary'
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+})
 
 // File validation constants
 const SUPPORTED_FORMATS = ['.jpg', '.jpeg', '.png', '.json', '.csv']
 const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
-const UPLOAD_DIR = join(process.cwd(), 'public', 'uploads')
 
 // Malware signature detection (basic implementation)
 const MALWARE_SIGNATURES = [
@@ -41,33 +46,27 @@ function validateFileExtension(filename: string): boolean {
   return SUPPORTED_FORMATS.includes(extension)
 }
 
-/**
- * Sanitize filename to prevent directory traversal
- */
-function sanitizeFilename(filename: string): string {
-  return filename
-    .replace(/[^a-zA-Z0-9._-]/g, '_')
-    .replace(/^\.+/, '')
-    .substring(0, 255)
-}
-
 export async function POST(request: NextRequest) {
   try {
+    const { userId } = await auth()
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const formData = await request.formData()
     const file = formData.get('file') as File
 
     if (!file) {
-      return NextResponse.json(
-        { error: 'No file provided' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
 
     // Validate file extension
     if (!validateFileExtension(file.name)) {
       return NextResponse.json(
         {
-          error: `Unsupported file format. Supported formats: ${SUPPORTED_FORMATS.join(', ')}`,
+          error: `Unsupported file format. Supported formats: ${SUPPORTED_FORMATS.join(
+            ', '
+          )}`,
         },
         { status: 400 }
       )
@@ -90,31 +89,35 @@ export async function POST(request: NextRequest) {
     const isMalicious = await scanForMalware(buffer)
     if (isMalicious) {
       return NextResponse.json(
-        { error: 'File contains potentially malicious content and was rejected' },
+        {
+          error: 'File contains potentially malicious content and was rejected',
+        },
         { status: 400 }
       )
     }
 
-    // Ensure upload directory exists
-    if (!existsSync(UPLOAD_DIR)) {
-      await mkdir(UPLOAD_DIR, { recursive: true })
-    }
-
-    // Sanitize and save filename with timestamp
-    const sanitizedName = sanitizeFilename(file.name)
-    const timestamp = Date.now()
-    const finalFilename = `${timestamp}_${sanitizedName}`
-    const filepath = join(UPLOAD_DIR, finalFilename)
-
-    // Save file to disk
-    await writeFile(filepath, buffer)
+    // Upload to Cloudinary
+    const uploadResult = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          context: { userId },
+        },
+        (error, result) => {
+          if (error) {
+            reject(error)
+          } else {
+            resolve(result)
+          }
+        }
+      )
+      uploadStream.end(buffer)
+    })
 
     return NextResponse.json(
       {
         success: true,
         message: 'File uploaded successfully',
-        filename: finalFilename,
-        url: `/uploads/${finalFilename}`,
+        url: (uploadResult as any).secure_url,
       },
       { status: 200 }
     )

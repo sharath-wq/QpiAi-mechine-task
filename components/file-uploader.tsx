@@ -5,6 +5,7 @@ import { Upload, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { useUploadContext } from '@/contexts/upload-context'
+import { useAuth } from '@clerk/nextjs'
 
 interface FileUploadState {
   id: string
@@ -18,6 +19,7 @@ export function FileUploader() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const dragOverRef = useRef(false)
   const { addUpload, updateUpload } = useUploadContext()
+  const { getToken } = useAuth()
 
   const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
 
@@ -37,7 +39,11 @@ export function FileUploader() {
     if (file.size > MAX_FILE_SIZE) {
       return {
         valid: false,
-        error: `File size exceeds 10MB limit. Your file is ${(file.size / 1024 / 1024).toFixed(2)}MB`,
+        error: `File size exceeds 10MB limit. Your file is ${(
+          file.size /
+          1024 /
+          1024
+        ).toFixed(2)}MB`,
       }
     }
 
@@ -59,6 +65,7 @@ export function FileUploader() {
           status: 'uploading',
         })
 
+        const token = await getToken()
         const xhr = new XMLHttpRequest()
 
         xhr.upload.addEventListener('progress', (event) => {
@@ -76,9 +83,7 @@ export function FileUploader() {
               progress: 100,
             })
             // Remove from local state after success
-            setLocalUploads((prev) =>
-              prev.filter((u) => u.id !== uploadId)
-            )
+            setLocalUploads((prev) => prev.filter((u) => u.id !== uploadId))
           } else {
             const response = JSON.parse(xhr.responseText)
             updateUpload(uploadId, {
@@ -96,6 +101,7 @@ export function FileUploader() {
         })
 
         xhr.open('POST', '/api/upload')
+        xhr.setRequestHeader('Authorization', `Bearer ${token}`)
         xhr.send(formData)
       } catch (error) {
         updateUpload(uploadId, {
@@ -104,7 +110,7 @@ export function FileUploader() {
         })
       }
     },
-    [addUpload, updateUpload]
+    [addUpload, updateUpload, getToken]
   )
 
   const handleFiles = useCallback(

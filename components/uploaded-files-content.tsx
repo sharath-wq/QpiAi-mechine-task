@@ -2,14 +2,12 @@ import { v2 as cloudinary } from "cloudinary";
 import { Card } from "@/components/ui/card";
 import { FilePreview } from "@/components/file-preview";
 
-// Configure Cloudinary
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Helper function to determine file type
 const getFileType = (filename: string) => {
   const ext = `.${filename.split(".").pop()?.toLowerCase()}`;
 
@@ -31,7 +29,6 @@ export async function UploadedFilesContent() {
   }[] = [];
 
   try {
-    // Fetch both image and raw resources
     const fetchImages = cloudinary.api.resources({
       resource_type: "image",
       type: "upload",
@@ -48,7 +45,6 @@ export async function UploadedFilesContent() {
 
     const [images, raw] = await Promise.all([fetchImages, fetchRaw]);
 
-    // Merge results
     const resources = [...images.resources, ...raw.resources];
 
     console.log("Fetched resources from Cloudinary:", resources);

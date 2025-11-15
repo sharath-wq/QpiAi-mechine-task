@@ -1,5 +1,3 @@
-// components/file-preview.tsx
-
 import { FileIcon, FileJson, FileText, FileSpreadsheet } from 'lucide-react'
 
 interface FilePreviewProps {
@@ -47,7 +45,6 @@ export function FilePreview({ file, content }: FilePreviewProps) {
         </div>
       )
     } catch (error) {
-      // Fallback for invalid JSON
       return (
         <div className="w-full h-32 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-md mb-2">
           <FileJson className="h-16 w-16 text-gray-400" />
@@ -57,7 +54,7 @@ export function FilePreview({ file, content }: FilePreviewProps) {
   }
 
   if (fileType === 'csv' && content) {
-    const rows = content.split('\n').slice(0, 5) // Preview first 5 rows
+    const rows = content.split('\n').slice(0, 5)
     return (
       <div className="w-full h-32 overflow-auto text-left bg-gray-100 dark:bg-gray-800 rounded-md mb-2 p-2">
         <table className="w-full text-xs table-auto">
@@ -77,7 +74,6 @@ export function FilePreview({ file, content }: FilePreviewProps) {
     )
   }
 
-  // Fallback icons
   let Icon = FileIcon
   if (fileType === 'json') Icon = FileJson
   if (fileType === 'csv') Icon = FileSpreadsheet

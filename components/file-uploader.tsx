@@ -2,11 +2,9 @@
 
 import { useState, useRef, useCallback } from 'react'
 import { Upload, X } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { useUploadContext } from '@/contexts/upload-context'
 import { useAuth } from '@clerk/nextjs'
-import { cn } from '@/lib/utils'
 
 interface FileUploadState {
   id: string
@@ -23,7 +21,7 @@ export function FileUploader() {
   const { addUpload, updateUpload } = useUploadContext()
   const { getToken } = useAuth()
 
-  const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
+  const MAX_FILE_SIZE = 10 * 1024 * 1024
 
   const validateFile = (file: File): { valid: boolean; error?: string } => {
     const ALLOWED_TYPES = [
@@ -84,7 +82,6 @@ export function FileUploader() {
               status: 'success',
               progress: 100,
             })
-            // Remove from local state after success
             setLocalUploads((prev) => prev.filter((u) => u.id !== uploadId))
           } else {
             const response = JSON.parse(xhr.responseText)
@@ -179,13 +176,8 @@ export function FileUploader() {
     }
   }
 
-  const removeUpload = (id: string) => {
-    setLocalUploads((prev) => prev.filter((u) => u.id !== id))
-  }
-
   return (
     <div className="space-y-6">
-      {/* Upload Area */}
       <Card
         className="border-2 border-dashed border-border hover:border-primary/50 transition-colors cursor-pointer p-8"
         onDragOver={handleDragOver}
@@ -220,53 +212,6 @@ export function FileUploader() {
           }}
         />
       </Card>
-
-      {/* Local Upload Queue - for validation feedback */}
-      {/* {localUploads.length > 0 && (
-        <div className="space-y-3">
-          <h2 className="font-semibold text-foreground">Queue</h2>
-          <div className="space-y-2">
-            {localUploads.map((upload) => (
-              <Card key={upload.id} className="p-4 flex items-center gap-4">
-                <div className="flex-1">
-                  <p className="text-sm font-medium truncate">
-                    {upload.file.name}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {(upload.file.size / 1024 / 1024).toFixed(2)} MB
-                  </p>
-                  {upload.error && (
-                    <p className="text-xs text-destructive mt-1">
-                      {upload.error}
-                    </p>
-                  )}
-                  {upload.status === 'uploading' && (
-                    <div className="relative h-2 w-full rounded-full bg-secondary mt-2">
-                      <div
-                        className={cn(
-                          'h-full rounded-full bg-primary transition-all',
-                          upload.progress === 100 && 'bg-green-500'
-                        )}
-                        style={{ width: `${upload.progress}%` }}
-                      />
-                      <span className="absolute inset-0 flex items-center justify-center text-xs font-medium text-primary-foreground">
-                        {upload.progress}%
-                      </span>
-                    </div>
-                  )}
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => removeUpload(upload.id)}
-                >
-                  <X className="w-4 h-4" />
-                </Button>
-              </Card>
-            ))}
-          </div>
-        </div>
-      )} */}
     </div>
   )
 }

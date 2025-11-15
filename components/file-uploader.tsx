@@ -222,7 +222,7 @@ export function FileUploader() {
       </Card>
 
       {/* Local Upload Queue - for validation feedback */}
-      {localUploads.length > 0 && (
+      {/* {localUploads.length > 0 && (
         <div className="space-y-3">
           <h2 className="font-semibold text-foreground">Queue</h2>
           <div className="space-y-2">
@@ -266,7 +266,7 @@ export function FileUploader() {
             ))}
           </div>
         </div>
-      )}
+      )} */}
     </div>
   )
 }

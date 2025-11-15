@@ -22,9 +22,6 @@ export function FileUploader() {
   const { addUpload, updateUpload } = useUploadContext()
   const { getToken } = useAuth()
 
-  // ---------------------------
-  // VALIDATION
-  // ---------------------------
   const validateFile = useCallback((file: File) => {
     const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'application/json', 'text/csv']
 
@@ -45,9 +42,6 @@ export function FileUploader() {
     return { valid: true }
   }, [])
 
-  // ---------------------------
-  // UPLOAD HANDLER
-  // ---------------------------
   const uploadFile = useCallback(
     async (fileUpload: FileUploadState) => {
       const uploadId = fileUpload.id
@@ -108,9 +102,6 @@ export function FileUploader() {
     [addUpload, updateUpload, getToken]
   )
 
-  // ---------------------------
-  // FILE HANDLER
-  // ---------------------------
   const handleFiles = useCallback(
     (files: FileList) => {
       Array.from(files).forEach((file) => {
@@ -138,9 +129,6 @@ export function FileUploader() {
     [uploadFile, addUpload, validateFile]
   )
 
-  // ---------------------------
-  // DRAG & DROP
-  // ---------------------------
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
     dragOverRef.current = true
@@ -160,9 +148,6 @@ export function FileUploader() {
     }
   }
 
-  // ---------------------------
-  // UI
-  // ---------------------------
   return (
     <div className="space-y-6">
       <Card

@@ -34,7 +34,7 @@ export function UploadNotification() {
   const isProcessing = activeCount > 0
 
   return (
-    <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-sm px-4 md:top-4 md:right-4 md:left-auto md:-translate-x-0">
+    <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-sm px-4 md:top-4 md:right-4 md:left-auto md:translate-x-0">
       <Card className="border shadow-lg">
         <div className="w-full p-4 flex items-center justify-between">
           <button

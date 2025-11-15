@@ -46,6 +46,17 @@ function validateFileExtension(filename: string): boolean {
   return SUPPORTED_FORMATS.includes(extension)
 }
 
+/**
+ * Get Cloudinary resource type from filename
+ */
+function getResourceType(filename: string): 'image' | 'raw' {
+  const extension = `.${filename.split('.').pop()?.toLowerCase()}`
+  if (['.jpg', '.jpeg', '.png'].includes(extension)) {
+    return 'image'
+  }
+  return 'raw'
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { userId } = await auth()
@@ -96,10 +107,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Get resource type for Cloudinary
+    const resource_type = getResourceType(file.name)
+
     // Upload to Cloudinary
     const uploadResult = await new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
+          resource_type,
           context: { userId },
         },
         (error, result) => {

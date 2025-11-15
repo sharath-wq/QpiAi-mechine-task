@@ -1,21 +1,55 @@
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+"use client";
+
+import { 
+  SignInButton, 
+  SignedIn, 
+  SignedOut, 
+  UserButton, 
+  useUser 
+} from "@clerk/nextjs";
 import Link from "next/link";
 
 export const Navigation = () => {
+  const { user } = useUser();
+
   return (
     <nav className="bg-background border-b border-foreground/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
+          
+          {/* Left */}
           <div className="shrink-0 flex items-center gap-4">
             <h1 className="text-xl font-semibold text-foreground">
-              <Link href="/">QpiAi</Link>
+              <Link href="/">FileRBAC</Link>
             </h1>
+
             <SignedIn>
-              <Link href="/uploads" className="text-sm font-medium text-muted-foreground hover:text-foreground">
+              {user?.publicMetadata?.role === "superadmin" && (
+                <Link
+                  href="/dashboard"
+                  className="text-sm font-medium text-muted-foreground hover:text-foreground"
+                >
+                  Dashboard
+                </Link>
+              )}
+
+              <Link
+                href="/upload"
+                className="text-sm font-medium text-muted-foreground hover:text-foreground"
+              >
+                Upload
+              </Link>
+
+              <Link
+                href="/uploads"
+                className="text-sm font-medium text-muted-foreground hover:text-foreground"
+              >
                 Uploads
               </Link>
             </SignedIn>
           </div>
+
+          {/* Right */}
           <div className="flex items-center gap-4">
             <SignedIn>
               <UserButton />
@@ -29,6 +63,7 @@ export const Navigation = () => {
               </SignInButton>
             </SignedOut>
           </div>
+
         </div>
       </div>
     </nav>

@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { v2 as cloudinary } from "cloudinary";
 import { Card } from "@/components/ui/card";
 import { FilePreview } from "@/components/file-preview";
@@ -8,18 +10,6 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-
-const getFileType = (filename: string) => {
-  const ext = `.${filename.split(".").pop()?.toLowerCase()}`;
-
-  if ([".jpg", ".jpeg", ".png", ".gif", ".webp"].includes(ext)) {
-    return "image";
-  }
-  if (ext === ".json") return "json";
-  if (ext === ".csv") return "csv";
-
-  return "other";
-};
 
 export async function UploadedFilesContent() {
   let filesWithContent: {
@@ -91,9 +81,7 @@ export async function UploadedFilesContent() {
                 {file.filename}
               </p>
 
-              <p className="text-xs text-gray-500 capitalize">
-                {getFileType(file.filename)}
-              </p>
+
             </Card>
           ))}
         </div>

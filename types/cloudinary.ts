@@ -36,7 +36,7 @@ export interface CloudinaryUploadResult {
   moderation?: Array<{
     status: 'pending' | 'approved' | 'rejected';
     kind: string;
-    response?: any;
+    response?: unknown;
   }>;
   // If accessibility analysis is enabled
   accessibility_analysis?: {
@@ -74,7 +74,7 @@ export interface CloudinaryResource {
     [key: string]: string;
   };
   access_mode: 'public' | 'authenticated';
-  access_control?: any[]; // Depending on specific access control settings
+  access_control?: unknown[]; // Depending on specific access control settings
   etag: string;
   placeholder: boolean;
   colors?: string[][];
@@ -82,5 +82,4 @@ export interface CloudinaryResource {
   is_animated?: boolean; // For images/videos
   is_web_optimized?: boolean; // For images/videos
   // Add other fields as needed based on specific API calls and options
-  [key: string]: any;
 }

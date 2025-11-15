@@ -56,20 +56,6 @@ export async function UploadedFilesContent() {
 
         let content: string | null = null;
 
-        if (fileType === "json" || fileType === "csv") {
-          try {
-            const response = await fetch(url);
-            if (response.ok) {
-              content = await response.text();
-            }
-          } catch (fetchError) {
-            console.error(
-              `Failed to fetch content for ${resource.public_id}:`,
-              fetchError
-            );
-          }
-        }
-
         return {
           filename,
           url,

@@ -1,6 +1,8 @@
 import { Suspense } from "react";
 import { UploadedFilesContent } from "@/components/uploaded-files-content";
 
+export const revalidate = 0; // Ensure the page is never cached
+
 export default async function UploadedFilesPage() {
   return (
     <div className="container mx-auto p-4">

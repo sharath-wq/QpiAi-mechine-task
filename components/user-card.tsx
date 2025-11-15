@@ -19,7 +19,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { deleteUser, editUser, removeRole } from "@/app/dashboard/actions";
+import { deleteUser, editUser } from "@/app/dashboard/actions";
 import { SubmitButton } from "./submit-button";
 
 interface UserCardProps {

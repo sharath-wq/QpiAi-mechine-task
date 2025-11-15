@@ -1,4 +1,5 @@
-import { FileIcon, FileJson, FileSpreadsheet } from 'lucide-react'
+import Image from "next/image"
+import { FileIcon, FileJson, FileSpreadsheet } from "lucide-react"
 
 interface FilePreviewProps {
   file: {
@@ -10,33 +11,38 @@ interface FilePreviewProps {
 }
 
 const getFileType = (filename: string) => {
-  const ext = `.${filename.split('.').pop()?.toLowerCase()}`
-  if (['.jpg', '.jpeg', '.png', '.gif', '.webp'].includes(ext)) {
-    return 'image'
+  const ext = `.${filename.split(".").pop()?.toLowerCase()}`
+  if ([".jpg", ".jpeg", ".png", ".gif", ".webp"].includes(ext)) {
+    return "image"
   }
-  if (ext === '.json') {
-    return 'json'
+  if (ext === ".json") {
+    return "json"
   }
-  if (ext === '.csv') {
-    return 'csv'
+  if (ext === ".csv") {
+    return "csv"
   }
-  return 'other'
+  return "other"
 }
 
 export function FilePreview({ file, content }: FilePreviewProps) {
   const fileType = getFileType(file.filename)
 
-  if (fileType === 'image') {
+  /** ---------------- IMAGE PREVIEW ---------------- */
+  if (fileType === "image") {
     return (
-      <img
-        src={file.url}
-        alt={file.filename}
-        className="w-full h-32 object-cover mb-2 rounded-md"
-      />
+      <div className="w-full h-32 mb-2 rounded-md relative overflow-hidden">
+        <Image
+          src={file.url}
+          alt={file.filename}
+          fill
+          className="object-cover rounded-md"
+        />
+      </div>
     )
   }
 
-  if (fileType === 'json' && content) {
+  /** ---------------- JSON PREVIEW ---------------- */
+  if (fileType === "json" && content) {
     try {
       const jsonContent = JSON.parse(content)
       return (
@@ -44,7 +50,7 @@ export function FilePreview({ file, content }: FilePreviewProps) {
           <pre className="text-xs">{JSON.stringify(jsonContent, null, 2)}</pre>
         </div>
       )
-    } catch (error) {
+    } catch {
       return (
         <div className="w-full h-32 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-md mb-2">
           <FileJson className="h-16 w-16 text-gray-400" />
@@ -53,16 +59,20 @@ export function FilePreview({ file, content }: FilePreviewProps) {
     }
   }
 
-  if (fileType === 'csv' && content) {
-    const rows = content.split('\n').slice(0, 5)
+  /** ---------------- CSV PREVIEW ---------------- */
+  if (fileType === "csv" && content) {
+    const rows = content.split("\n").slice(0, 5)
     return (
       <div className="w-full h-32 overflow-auto text-left bg-gray-100 dark:bg-gray-800 rounded-md mb-2 p-2">
         <table className="w-full text-xs table-auto">
           <tbody>
             {rows.map((row, i) => (
               <tr key={i}>
-                {row.split(',').map((cell, j) => (
-                  <td key={j} className="p-1 border border-gray-300 dark:border-gray-700 whitespace-nowrap">
+                {row.split(",").map((cell, j) => (
+                  <td
+                    key={j}
+                    className="p-1 border border-gray-300 dark:border-gray-700 whitespace-nowrap"
+                  >
                     {cell}
                   </td>
                 ))}
@@ -74,9 +84,10 @@ export function FilePreview({ file, content }: FilePreviewProps) {
     )
   }
 
+  /** ---------------- GENERIC FILE PREVIEW ---------------- */
   let Icon = FileIcon
-  if (fileType === 'json') Icon = FileJson
-  if (fileType === 'csv') Icon = FileSpreadsheet
+  if (fileType === "json") Icon = FileJson
+  if (fileType === "csv") Icon = FileSpreadsheet
 
   return (
     <div className="w-full h-32 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-md mb-2">

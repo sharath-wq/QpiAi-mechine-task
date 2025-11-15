@@ -52,9 +52,8 @@ export async function UploadedFilesContent() {
       resources.map(async (resource: CloudinaryResource) => {
         const url = resource.secure_url;
         const filename = url.substring(url.lastIndexOf("/") + 1);
-        const fileType = getFileType(filename);
 
-        let content: string | null = null;
+        const content: string | null = null;
 
         return {
           filename,

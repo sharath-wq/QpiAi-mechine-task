@@ -57,6 +57,17 @@ function getResourceType(filename: string): 'image' | 'raw' {
   return 'raw'
 }
 
+/**
+ * Get filename without extension
+ */
+function getFileNameWithoutExtension(filename: string): string {
+  const lastDotIndex = filename.lastIndexOf('.');
+  if (lastDotIndex === -1) {
+    return filename;
+  }
+  return filename.substring(0, lastDotIndex);
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { userId } = await auth()
@@ -109,6 +120,11 @@ export async function POST(request: NextRequest) {
 
     // Get resource type for Cloudinary
     const resource_type = getResourceType(file.name)
+    const fileNameWithoutExt = getFileNameWithoutExtension(file.name);
+    const fileExtension = file.name.split('.').pop();
+    const uniqueSuffix = Math.random().toString(36).substring(2, 8);
+    const uniqueFileName = `${fileNameWithoutExt}-${uniqueSuffix}${fileExtension ? `.${fileExtension}` : ''}`;
+
 
     // Upload to Cloudinary
     const uploadResult = await new Promise((resolve, reject) => {
@@ -116,7 +132,7 @@ export async function POST(request: NextRequest) {
         {
           resource_type,
           folder: 'qpiai', // Upload files to the 'qpiai' folder
-          public_id: `qpiai/${file.name}`, // Preserve original filename with extension
+          public_id: `qpiai/${uniqueFileName}`, // Use unique filename
           context: { userId },
         },
         (error, result) => {

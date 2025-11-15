@@ -1,7 +1,9 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Users, ShieldCheck, Shield, UserCog, User, Ticket } from "lucide-react";
+import { SafeUser, Roles } from "@/types/clerk";
+import { LucideIcon } from "lucide-react";
 
-const ICONS = {
+const ICONS: Record<Roles | "total", LucideIcon> = {
   total: Users,
   superadmin: ShieldCheck,
   admin: Shield,
@@ -12,9 +14,13 @@ const ICONS = {
 
 const ROLES = ["superadmin", "admin", "manager", "user", "guest"] as const;
 
-export const StatsGrid = ({ users }: any) => {
-  const roleCount = (role: string) =>
-    users.filter((u: any) => u?.role === role).length;
+interface StatsGridProps {
+  users: SafeUser[];
+}
+
+export const StatsGrid = ({ users }: StatsGridProps) => {
+  const roleCount = (role: Roles | "guest") =>
+    users.filter((u) => u?.role === role).length;
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
@@ -36,7 +42,13 @@ export const StatsGrid = ({ users }: any) => {
   );
 };
 
-const StatCard = ({ label, value, Icon }: any) => (
+interface StatCardProps {
+  label: string;
+  value: number;
+  Icon: LucideIcon;
+}
+
+const StatCard = ({ label, value, Icon }: StatCardProps) => (
   <Card>
     <CardContent className="pt-6">
       <div className="flex items-center justify-between">

@@ -37,7 +37,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
             Oops! Something went wrong.
           </h2>
           <p className="text-gray-600 mb-2">
-            We're sorry for the inconvenience. Please try refreshing the page.
+            We&apos;re sorry for the inconvenience. Please try refreshing the page.
           </p>
           {this.state.error && (
             <details className="text-sm text-gray-500 mt-4 p-2 bg-gray-100 rounded">

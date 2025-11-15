@@ -2,6 +2,7 @@ import { clerkClient } from "@clerk/nextjs/server";
 import { setRole } from "@/app/dashboard/actions";
 import { StatsGrid } from "@/components/stats-grid";
 import { UsersList } from "@/components/users-list";
+import { ClerkUser, SafeUser } from "@/types/clerk";
 
 export async function AdminContent() {
   const client = await clerkClient();
@@ -20,7 +21,7 @@ export async function AdminContent() {
   );
 }
 
-function toSafeUser(u: any) {
+function toSafeUser(u: ClerkUser): SafeUser {
   return {
     id: u.id,
     firstName: u.firstName,

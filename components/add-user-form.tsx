@@ -32,13 +32,16 @@ export function AddUserForm() {
     try {
       await addUser(formData);
       setOpen(false);
-    } catch (err: any) {
-      try {
-        const msgs = JSON.parse(err.message);
-        setError(msgs);
-      } catch {
-        setError([err.message]);
+    } catch (err: unknown) {
+      let messages: string[] = ["Unknown error occurred"];
+      if (err instanceof Error) {
+        try {
+          messages = JSON.parse(err.message);
+        } catch {
+          messages = [err.message];
+        }
       }
+      setError(messages);
     } finally {
       setLoading(false);
     }

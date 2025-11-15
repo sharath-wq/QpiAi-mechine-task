@@ -2,6 +2,7 @@
 
 import { Roles } from "@/types/clerk";
 import { auth, clerkClient } from "@clerk/nextjs/server";
+import { isClerkAPIResponseError } from "@clerk/clerk-react/errors";
 import { revalidatePath } from "next/cache";
 
 // ---------- AUTH CHECK ----------
@@ -36,12 +37,17 @@ export async function addUser(formData: FormData) {
     });
 
     revalidatePath("/users");
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Clerk error:", error);
 
-    const messages = error?.errors?.map(
-      (e: any) => e.longMessage || e.message
-    ) ?? [error.message || "Unknown error occurred"];
+    let messages: string[] = ["Unknown error occurred"];
+    if (isClerkAPIResponseError(error)) {
+      messages = error.errors?.map(
+        (e) => e.longMessage || e.message
+      ) ?? [error.message || "Unknown API error"];
+    } else if (error instanceof Error) {
+      messages = [error.message];
+    }
     throw new Error(JSON.stringify(messages));
   }
 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import { v2 as cloudinary } from 'cloudinary'
+import type { UploadApiResponse } from 'cloudinary'
 
 // Configure Cloudinary
 cloudinary.config({
@@ -150,7 +151,7 @@ export async function POST(request: NextRequest) {
       {
         success: true,
         message: 'File uploaded successfully',
-        url: (uploadResult as any).secure_url,
+        url: (uploadResult as UploadApiResponse).secure_url,
       },
       { status: 200 }
     )

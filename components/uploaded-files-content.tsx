@@ -1,6 +1,7 @@
 import { v2 as cloudinary } from "cloudinary";
 import { Card } from "@/components/ui/card";
 import { FilePreview } from "@/components/file-preview";
+import { CloudinaryResource } from "@/types/cloudinary";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -47,10 +48,8 @@ export async function UploadedFilesContent() {
 
     const resources = [...images.resources, ...raw.resources];
 
-    console.log("Fetched resources from Cloudinary:", resources);
-
     filesWithContent = await Promise.all(
-      resources.map(async (resource: any) => {
+      resources.map(async (resource: CloudinaryResource) => {
         const url = resource.secure_url;
         const filename = url.substring(url.lastIndexOf("/") + 1);
         const fileType = getFileType(filename);
@@ -88,7 +87,7 @@ export async function UploadedFilesContent() {
         environment variables and network connection.
       </div>
     );
-  }
+    }
 
   return (
     <>

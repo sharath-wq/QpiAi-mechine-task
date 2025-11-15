@@ -11,7 +11,7 @@ import { RoleForm } from "@/components/role-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { permissionsByRole } from "@/constants";
-import { Roles } from "@/types/clerk";
+import { Roles, SafeUser } from "@/types/clerk";
 import {
   Dialog,
   DialogContent,
@@ -22,7 +22,12 @@ import {
 import { deleteUser, editUser, removeRole } from "@/app/dashboard/actions";
 import { SubmitButton } from "./submit-button";
 
-export const UserCard = ({ user, setRole }: any) => {
+interface UserCardProps {
+  user: SafeUser;
+  setRole: (formData: FormData) => Promise<void>;
+}
+
+export const UserCard = ({ user, setRole }: UserCardProps) => {
   const role = (user.role as Roles) || "guest";
   const permissions = permissionsByRole[role] ?? [];
   const [openEdit, setOpenEdit] = useState(false);

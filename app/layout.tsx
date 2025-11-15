@@ -10,6 +10,8 @@ import {
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Navigation } from "@/components/navigation";
+import { UploadProvider } from "@/contexts/upload-context";
+import { UploadNotification } from "@/components/upload-notification";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,7 +40,10 @@ export default function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <Navigation />
-          {children}
+          <UploadProvider>
+            {children}
+            <UploadNotification />
+          </UploadProvider>
         </body>
       </html>
     </ClerkProvider>

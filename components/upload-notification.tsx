@@ -31,7 +31,6 @@ export function UploadNotification() {
 
   if (uploads.length === 0 || isClosed) return null
 
-  const hasErrors = errorCount > 0
   const isProcessing = activeCount > 0
 
   return (

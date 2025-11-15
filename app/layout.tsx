@@ -1,18 +1,13 @@
 import type { Metadata } from "next";
 import {
   ClerkProvider,
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
 } from "@clerk/nextjs";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Navigation } from "@/components/navigation";
 import { UploadProvider } from "@/contexts/upload-context";
 import { UploadNotification } from "@/components/upload-notification";
-import ErrorBoundary from "@/components/error-boundary"; // Import the ErrorBoundary
+import ErrorBoundary from "@/components/error-boundary";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

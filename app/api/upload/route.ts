@@ -131,8 +131,8 @@ export async function POST(request: NextRequest) {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
           resource_type,
-          folder: 'qpiai', // Upload files to the 'qpiai' folder
-          public_id: `qpiai/${uniqueFileName}`, // Use unique filename
+          folder: 'qpiai',
+          public_id: `${uniqueFileName}`,
           context: { userId },
         },
         (error, result) => {

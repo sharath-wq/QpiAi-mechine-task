@@ -147,7 +147,6 @@ export function FileUploader() {
 
       setLocalUploads((prev) => [...prev, ...newUploads])
 
-      // Upload all valid files
       newUploads.forEach((upload) => {
         if (upload.status === 'pending') {
           uploadFile(upload)

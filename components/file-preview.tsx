@@ -1,4 +1,4 @@
-import { FileIcon, FileJson, FileText, FileSpreadsheet } from 'lucide-react'
+import { FileIcon, FileJson, FileSpreadsheet } from 'lucide-react'
 
 interface FilePreviewProps {
   file: {

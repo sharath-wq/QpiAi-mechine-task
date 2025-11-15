@@ -8,6 +8,7 @@ import { Navigation } from "@/components/navigation";
 import { UploadProvider } from "@/contexts/upload-context";
 import { UploadNotification } from "@/components/upload-notification";
 import ErrorBoundary from "@/components/error-boundary";
+import { Analytics } from "@vercel/analytics/react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,6 +43,7 @@ export default function RootLayout({
               <UploadNotification />
             </UploadProvider>
           </ErrorBoundary>
+          <Analytics />
         </body>
       </html>
     </ClerkProvider>
